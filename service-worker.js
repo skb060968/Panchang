@@ -4,17 +4,17 @@ const ASSET_CACHE = `${SW_VERSION}-assets`;
 const DATA_CACHE = `${SW_VERSION}-data`;
 
 const ASSETS = [
-  '/', // index.html
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  './', // index.html
+  './index.html',
+  './style.css',
+  './app.js',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 // The data file (single source of truth)
-const DATA_URL = '/data/dates.json';
+const DATA_URL = './data/dates.json';
 
 // Install: cache shell assets
 self.addEventListener('install', event => {
@@ -52,7 +52,7 @@ self.addEventListener('fetch', event => {
   // Navigation requests -> serve index.html (app shell) from cache first
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
     event.respondWith(
-      caches.match('/index.html').then(resp => resp || fetch(req))
+      caches.match('./index.html').then(resp => resp || fetch(req))
     );
     return;
   }
