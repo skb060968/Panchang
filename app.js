@@ -1,8 +1,8 @@
 // app.js — updated for vibrant UI and screen transitions
 const DATA_URLS = {
-  'Purnima': '/data/purnima.json',
-  'Amavasya': '/data/amavasya.json',
-  'Ekadashi': '/data/ekadashi.json'
+  'Purnima': './data/purnima.json',
+  'Amavasya': './data/amavasya.json',
+  'Ekadashi': './data/ekadashi.json'
 };
 const TZ = 'Asia/Kolkata';
 
@@ -214,5 +214,5 @@ exitDisplay?.addEventListener('click', () => showScreen(welcome));
 
 /* Optional: register service worker */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js').catch(() => { });
+  navigator.serviceWorker.register('./service-worker.js').catch(() => { });
 }
