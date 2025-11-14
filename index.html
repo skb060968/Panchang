@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panchang Dates — PWA Prototype</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body role="application">
+
+  <!-- Splash -->
+  <section id="splash" class="screen splash-screen" aria-hidden="false" tabindex="-1">
+    <div class="splash-inner">
+      <h1 id="splash-title" class="splash-title">Namaste</h1>
+      <p id="splash-sub" class="splash-sub">Panchang quick lookup</p>
+    </div>
+  </section>
+
+  <!-- Welcome -->
+  <main id="welcome" class="screen hidden" role="main" aria-labelledby="welcome-heading">
+    <div class="card center-card" aria-hidden="false">
+      <h1 id="welcome-heading" class="welcome-heading">Choose an event</h1>
+      <div class="tiny welcome-sub">Select an event to see the next occurrence</div>
+
+      <div class="btn-row" role="group" aria-label="Event choices">
+        <button class="primary small" data-type="Purnima" aria-label="Show next Purnima">PURNIMA</button>
+        <button class="primary small" data-type="Amavasya" aria-label="Show next Amavasya">AMAVASYA</button>
+        <button class="primary small" data-type="Ekadashi" aria-label="Show next Ekadashi">EKADASHI</button>
+      </div>
+
+      <div class="controls">
+        <button id="exit-welcome" class="ghost" aria-label="Exit application">Exit</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Display -->
+  <section id="display" class="screen hidden" aria-live="polite">
+    <div class="card display-card">
+      <header class="display-header" role="banner">
+        <div id="display-title" class="display-title"></div>
+        <div id="display-count" class="tiny display-count" aria-live="polite"></div>
+      </header>
+
+      <div id="list" class="list" role="list"></div>
+
+      <div class="footer controls">
+        <button id="exit-display" class="ghost" aria-label="Back to welcome">Exit</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
