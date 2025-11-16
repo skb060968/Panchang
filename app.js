@@ -191,7 +191,7 @@ async function attemptExit() {
   if (splashTitle) splashTitle.textContent = 'Goodbye';
   if (splashSub) splashSub.textContent = 'See you soon';
   showScreen(splash);
-  
+
   // Try to close window after showing goodbye
   setTimeout(() => {
     window.close();
