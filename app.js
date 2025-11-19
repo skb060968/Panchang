@@ -187,28 +187,6 @@ primaryButtons.forEach(btn => {
 /* Back button behavior */
 backButton?.addEventListener('click', () => showScreen(welcome));
 
-/* Handle browser/phone back button */
-let goodbyeShown = false;
-
-window.addEventListener('popstate', () => {
-  // If goodbye already shown, let the browser handle the back (close app)
-  if (goodbyeShown) {
-    return;
-  }
-  
-  // First back press: show goodbye and push state again
-  goodbyeShown = true;
-  if (splashTitle) splashTitle.textContent = 'Goodbye';
-  if (splashSub) splashSub.textContent = 'See you soon';
-  showScreen(splash);
-  
-  // Push state again so next back press will close the app
-  history.pushState({ page: 'goodbye' }, '', '');
-});
-
-// Push initial state to enable back button handling
-history.pushState({ page: 'welcome' }, '', '');
-
 /* Service worker with auto-update */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js').then(registration => {
