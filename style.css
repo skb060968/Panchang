@@ -98,8 +98,8 @@ body {
 .welcome-heading {
   font-size: 32px;
   font-weight: 800;
-  color: var(--text-light);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  color: #fef3c7;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   margin-bottom: 0;
 }
 .welcome-sub {

@@ -1,5 +1,5 @@
 // service-worker.js
-const CACHE_NAME = 'panchang-v16';
+const CACHE_NAME = 'panchang-v17';
 
 const FILES_TO_CACHE = [
   './',
