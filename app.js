@@ -198,17 +198,16 @@ if ('serviceWorker' in navigator) {
       const newWorker = registration.installing;
       newWorker.addEventListener('statechange', () => {
         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          // Show update notification
-          if (splashTitle && splashSub) {
-            splashTitle.textContent = 'Update Available';
-            splashSub.textContent = 'Refreshing app...';
-            showScreen(splash);
-          }
+          // Show update banner
+          const banner = document.createElement('div');
+          banner.className = 'update-banner';
+          banner.innerHTML = '✨ Update Available - Refreshing...';
+          document.body.appendChild(banner);
           
-          // Reload after showing message
+          // Reload after showing banner
           setTimeout(() => {
             window.location.reload();
-          }, 1000);
+          }, 1500);
         }
       });
     });
