@@ -1,5 +1,5 @@
 // service-worker.js
-const SW_VERSION = 'panchang-v4';
+const SW_VERSION = 'panchang-v5';
 const ASSET_CACHE = `${SW_VERSION}-assets`;
 const DATA_CACHE = `${SW_VERSION}-data`;
 

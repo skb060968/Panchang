@@ -209,7 +209,31 @@ window.addEventListener('popstate', () => {
 // Push initial state to enable back button handling
 history.pushState({ page: 'welcome' }, '', '');
 
-/* Optional: register service worker */
+/* Service worker with auto-update */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js').catch(() => { });
+  navigator.serviceWorker.register('./service-worker.js').then(registration => {
+    // Check for updates every time the app is opened
+    registration.update();
+    
+    // Listen for new service worker
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // New service worker available, reload to activate
+          console.log('New version available! Reloading...');
+          window.location.reload();
+        }
+      });
+    });
+  }).catch(() => { });
+  
+  // Reload when new service worker takes control
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
+  });
 }
