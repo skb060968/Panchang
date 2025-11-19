@@ -111,7 +111,7 @@ body {
 /* Buttons */
 .btn-row {
   display: flex;
-  gap: 12px;
+  gap: 18px;
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 50px;

@@ -198,9 +198,17 @@ if ('serviceWorker' in navigator) {
       const newWorker = registration.installing;
       newWorker.addEventListener('statechange', () => {
         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          // New service worker available, reload to activate
-          console.log('New version available! Reloading...');
-          window.location.reload();
+          // Show update notification
+          if (splashTitle && splashSub) {
+            splashTitle.textContent = 'Update Available';
+            splashSub.textContent = 'Refreshing app...';
+            showScreen(splash);
+          }
+          
+          // Reload after showing message
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
       });
     });
