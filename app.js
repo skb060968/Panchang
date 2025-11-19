@@ -188,22 +188,22 @@ primaryButtons.forEach(btn => {
 backButton?.addEventListener('click', () => showScreen(welcome));
 
 /* Handle browser/phone back button */
-let isShowingGoodbye = false;
+let goodbyeShown = false;
 
 window.addEventListener('popstate', () => {
-  if (isShowingGoodbye) return;
+  // If goodbye already shown, let the browser handle the back (close app)
+  if (goodbyeShown) {
+    return;
+  }
   
-  // Show goodbye screen
-  isShowingGoodbye = true;
+  // First back press: show goodbye and push state again
+  goodbyeShown = true;
   if (splashTitle) splashTitle.textContent = 'Goodbye';
   if (splashSub) splashSub.textContent = 'See you soon';
   showScreen(splash);
   
-  // Close app after showing goodbye
-  setTimeout(() => {
-    isShowingGoodbye = false;
-    window.close();
-  }, 900);
+  // Push state again so next back press will close the app
+  history.pushState({ page: 'goodbye' }, '', '');
 });
 
 // Push initial state to enable back button handling
