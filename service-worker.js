@@ -1,90 +1,61 @@
 // service-worker.js
-const SW_VERSION = 'panchang-v13';
-const ASSET_CACHE = `${SW_VERSION}-assets`;
-const DATA_CACHE = `${SW_VERSION}-data`;
+const CACHE_NAME = 'panchang-v16';
 
-const ASSETS = [
-  './', // index.html
+const FILES_TO_CACHE = [
+  './',
   './index.html',
   './style.css',
   './app.js',
   './manifest.json',
   './icons/icon-192.png',
-  './icons/icon-512.png'
-];
-
-// Data files
-const DATA_FILES = [
+  './icons/icon-512.png',
   './data/purnima.json',
   './data/amavasya.json',
   './data/ekadashi.json'
 ];
 
-// Install: cache shell assets
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('Caching app shell...');
+      return cache.addAll(FILES_TO_CACHE);
+    })
+  );
+  // Skip waiting to activate new service worker immediately
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(ASSET_CACHE).then(cache => cache.addAll(ASSETS))
-  );
 });
 
-// Activate: cleanup old caches
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(k => ![ASSET_CACHE, DATA_CACHE].includes(k)).map(k => caches.delete(k))
-    )).then(() => self.clients.claim())
+    caches.keys().then((keyList) =>
+      Promise.all(
+        keyList.map((key) => {
+          if (key !== CACHE_NAME) {
+            console.log('Removing old cache:', key);
+            return caches.delete(key);
+          }
+        })
+      )
+    )
   );
-});
-
-// Fetch strategy:
-// - For dates.json: stale-while-revalidate (serve cache if available, update in background).
-// - For other navigation/asset requests: cache-first (fall back to network).
-self.addEventListener('fetch', event => {
-  const req = event.request;
-  const url = new URL(req.url);
-
-  // Only handle GET
-  if (req.method !== 'GET') return;
-
-  // Handle data files with stale-while-revalidate
-  if (DATA_FILES.some(file => url.pathname.endsWith(file))) {
-    event.respondWith(staleWhileRevalidate(req));
-    return;
-  }
-
-  // Navigation requests -> serve index.html (app shell) from cache first
-  if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
-    event.respondWith(
-      caches.match('./index.html').then(resp => resp || fetch(req))
-    );
-    return;
-  }
-
-  // Static assets: cache-first
-  event.respondWith(
-    caches.match(req).then(cached => cached || fetch(req).then(networkResp => {
-      // populate cache for future
-      return caches.open(ASSET_CACHE).then(cache => {
-        // avoid caching opaque responses like cross-origin images without CORS
-        try { cache.put(req, networkResp.clone()); } catch (e) {}
-        return networkResp;
+  // Take control of all pages immediately
+  self.clients.claim();
+  
+  // Notify all clients about the update
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'APP_UPDATED',
+        version: CACHE_NAME
       });
-    }).catch(() => cached))
-  );
+    });
+  });
 });
 
-async function staleWhileRevalidate(req) {
-  const cache = await caches.open(DATA_CACHE);
-  const cached = await cache.match(req);
-  const fetchAndUpdate = fetch(req).then(networkResp => {
-    if(networkResp && networkResp.ok) cache.put(req, networkResp.clone());
-    return networkResp;
-  }).catch(() => null);
-
-  // Return cached immediately if present, otherwise wait for network
-  return cached || (await fetchAndUpdate) || new Response(JSON.stringify([]), {
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
-
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
+  );
+});

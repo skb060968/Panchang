@@ -187,38 +187,30 @@ primaryButtons.forEach(btn => {
 /* Back button behavior */
 backButton?.addEventListener('click', () => showScreen(welcome));
 
-/* Service worker with auto-update */
+/* Service worker registration */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js').then(registration => {
-    // Check for updates every time the app is opened
-    registration.update();
+    console.log('Service Worker registered');
     
-    // Listen for new service worker
-    registration.addEventListener('updatefound', () => {
-      const newWorker = registration.installing;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          // Show update banner
-          const banner = document.createElement('div');
-          banner.className = 'update-banner';
-          banner.innerHTML = '✨ Update Available - Refreshing...';
-          document.body.appendChild(banner);
-          
-          // Reload after showing banner
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-        }
-      });
-    });
-  }).catch(() => { });
+    // Check for updates
+    registration.update();
+  }).catch(err => {
+    console.log('Service Worker registration failed:', err);
+  });
   
-  // Reload when new service worker takes control
-  let refreshing = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!refreshing) {
-      refreshing = true;
-      window.location.reload();
+  // Listen for update messages from service worker
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'APP_UPDATED') {
+      // Show update banner
+      const banner = document.createElement('div');
+      banner.className = 'update-banner';
+      banner.innerHTML = '✨ Update Available - Refreshing...';
+      document.body.appendChild(banner);
+      
+      // Reload after showing banner
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   });
 }
