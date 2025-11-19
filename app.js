@@ -199,9 +199,10 @@ window.addEventListener('popstate', () => {
   if (splashSub) splashSub.textContent = 'See you soon';
   showScreen(splash);
   
-  // Allow the app to close after showing goodbye
+  // Close app after showing goodbye
   setTimeout(() => {
     isShowingGoodbye = false;
+    window.close();
   }, 900);
 });
 
