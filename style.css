@@ -165,7 +165,10 @@ button.ghost:active {
   margin-top: 14px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 12px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 /* Display screen background */

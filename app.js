@@ -18,8 +18,7 @@ const displayTitle = document.getElementById('display-title');
 const displayCount = document.getElementById('display-count');
 
 const primaryButtons = Array.from(document.querySelectorAll('button.primary'));
-const exitWelcome = document.getElementById('exit-welcome');
-const exitDisplay = document.getElementById('exit-display');
+const backButton = document.getElementById('back-button');
 
 /* Navigation */
 function showScreen(screen) {
@@ -185,32 +184,29 @@ primaryButtons.forEach(btn => {
   });
 });
 
-/* Exit behavior */
-async function attemptExit() {
-  // Show goodbye splash
+/* Back button behavior */
+backButton?.addEventListener('click', () => showScreen(welcome));
+
+/* Handle browser/phone back button */
+let isShowingGoodbye = false;
+
+window.addEventListener('popstate', () => {
+  if (isShowingGoodbye) return;
+  
+  // Show goodbye screen
+  isShowingGoodbye = true;
   if (splashTitle) splashTitle.textContent = 'Goodbye';
   if (splashSub) splashSub.textContent = 'See you soon';
   showScreen(splash);
-
-  // Try to close window after showing goodbye
+  
+  // Allow the app to close after showing goodbye
   setTimeout(() => {
-    window.close();
-    // If window.close() doesn't work (browser restriction), close the tab
-    if (!window.closed) {
-      window.open('', '_self').close();
-    }
+    isShowingGoodbye = false;
   }, 900);
-}
+});
 
-function showGoodbyeSplash() {
-  if (splashTitle) splashTitle.textContent = 'Goodbye';
-  if (splashSub) splashSub.textContent = 'See you soon';
-  showScreen(splash);
-  setTimeout(() => showScreen(welcome), 900);
-}
-
-exitWelcome?.addEventListener('click', () => attemptExit());
-exitDisplay?.addEventListener('click', () => showScreen(welcome));
+// Push initial state to enable back button handling
+history.pushState({ page: 'welcome' }, '', '');
 
 /* Optional: register service worker */
 if ('serviceWorker' in navigator) {

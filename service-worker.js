@@ -13,8 +13,12 @@ const ASSETS = [
   './icons/icon-512.png'
 ];
 
-// The data file (single source of truth)
-const DATA_URL = './data/dates.json';
+// Data files
+const DATA_FILES = [
+  './data/purnima.json',
+  './data/amavasya.json',
+  './data/ekadashi.json'
+];
 
 // Install: cache shell assets
 self.addEventListener('install', event => {
@@ -43,8 +47,8 @@ self.addEventListener('fetch', event => {
   // Only handle GET
   if (req.method !== 'GET') return;
 
-  // Handle data file with stale-while-revalidate
-  if (url.pathname === DATA_URL) {
+  // Handle data files with stale-while-revalidate
+  if (DATA_FILES.some(file => url.pathname.endsWith(file))) {
     event.respondWith(staleWhileRevalidate(req));
     return;
   }
@@ -83,3 +87,4 @@ async function staleWhileRevalidate(req) {
     headers: { 'Content-Type': 'application/json' }
   });
 }
+
