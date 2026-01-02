@@ -545,3 +545,87 @@ button.ghost:active {
     -webkit-font-smoothing: subpixel-antialiased;
   }
 }
+
+
+/* ⚠️ Custom Modals */
+#confirm-modal,
+#alert-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1001;
+  justify-content: center;
+  align-items: center;
+}
+
+#confirm-modal .modal-content,
+#alert-modal .modal-content {
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+#confirm-modal button:hover,
+#alert-modal button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+}
+
+#confirm-modal button:active,
+#alert-modal button:active {
+  transform: translateY(0);
+}
+
+#confirm-no-btn:hover {
+  background: white !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3) !important;
+}
+
+#alert-icon-container {
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Dark mode support for modals (if you add dark mode later) */
+@media (prefers-color-scheme: dark) {
+  #confirm-modal .modal-content,
+  #alert-modal .modal-content {
+    background: linear-gradient(135deg, rgba(30, 30, 50, 0.95) 0%, rgba(40, 40, 60, 0.95) 100%) !important;
+    border: 1px solid rgba(100, 150, 255, 0.3) !important;
+    color: #fff;
+  }
+
+  #confirm-modal h2,
+  #alert-modal h2 {
+    color: #60a5fa !important;
+  }
+
+  #confirm-modal p,
+  #alert-modal p {
+    color: #e0e0e0 !important;
+  }
+
+  #confirm-no-btn {
+    background: rgba(255, 107, 107, 0.1) !important;
+    color: #ff9999 !important;
+    border-color: #ff9999 !important;
+  }
+
+  #confirm-no-btn:hover {
+    background: rgba(255, 107, 107, 0.2) !important;
+    box-shadow: 0 4px 15px rgba(255, 153, 153, 0.3) !important;
+  }
+}

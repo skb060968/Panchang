@@ -214,3 +214,89 @@ if ('serviceWorker' in navigator) {
     }
   });
 }
+
+
+/* ==========================
+   Custom Confirmation Modal
+   ========================== */
+function showConfirmModal(message) {
+  return new Promise((resolve) => {
+    const modal = document.getElementById('confirm-modal');
+    const messageEl = document.getElementById('confirm-message');
+    const yesBtn = document.getElementById('confirm-yes-btn');
+    const noBtn = document.getElementById('confirm-no-btn');
+    
+    // Set message
+    messageEl.textContent = message;
+    
+    // Show modal
+    modal.style.display = 'flex';
+    
+    // Handle Yes button
+    const handleYes = () => {
+      modal.style.display = 'none';
+      cleanup();
+      resolve(true);
+    };
+    
+    // Handle No button
+    const handleNo = () => {
+      modal.style.display = 'none';
+      cleanup();
+      resolve(false);
+    };
+    
+    // Cleanup listeners
+    const cleanup = () => {
+      yesBtn.removeEventListener('click', handleYes);
+      noBtn.removeEventListener('click', handleNo);
+    };
+    
+    // Add event listeners
+    yesBtn.addEventListener('click', handleYes);
+    noBtn.addEventListener('click', handleNo);
+  });
+}
+
+/* ==========================
+   Custom Alert Modal
+   ========================== */
+function showAlertModal(message, icon = 'ℹ️', iconColor = null) {
+  return new Promise((resolve) => {
+    const modal = document.getElementById('alert-modal');
+    const messageEl = document.getElementById('alert-message');
+    const iconEl = document.getElementById('alert-icon');
+    const iconContainer = document.getElementById('alert-icon-container');
+    const okBtn = document.getElementById('alert-ok-btn');
+    
+    // Set message and icon
+    messageEl.textContent = message;
+    iconEl.textContent = icon;
+    
+    // Set icon color if provided
+    if (iconColor) {
+      iconContainer.style.background = iconColor;
+    } else {
+      // Reset to default gradient
+      iconContainer.style.background = 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)';
+    }
+    
+    // Show modal
+    modal.style.display = 'flex';
+    
+    // Handle OK button
+    const handleOk = () => {
+      modal.style.display = 'none';
+      cleanup();
+      resolve();
+    };
+    
+    // Cleanup listeners
+    const cleanup = () => {
+      okBtn.removeEventListener('click', handleOk);
+    };
+    
+    // Add event listener
+    okBtn.addEventListener('click', handleOk);
+  });
+}
